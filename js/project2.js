@@ -76,9 +76,9 @@ function alphabetizer(names) {
 
 alphabetizer(moonWalkers);*/
 
-var psiResults;
+var psinsights;
 
-psiResults = {
+psinsights = {
  "kind": "pagespeedonline#result",
  "id": "/speed/pagespeed",
  "responseCode": 200,
@@ -182,14 +182,33 @@ psiResults = {
 }
 
 
-function totalBytes(results){
-	
-  var noBytes = parseInt(results.pageStats.totalRequestBytes) + parseInt(results.pageStats.htmlResponseBytes) + parseInt(results.pageStats.cssResponseBytes)
-               + parseInt(results.pageStats.imageResponseBytes) + parseInt(results.pageStats.javascriptResponseBytes) + parseInt(results.pageStats.otherResponseBytes);
-	console.log(noBytes);
+function ruleList(results) {
+ var ruleNameList = [], listresults, psiJson;
+ for (psiJson in results.formattedResults.ruleResults) {
+
+     if ('localizedRuleName' in results.formattedResults.ruleResults[psiJson]) {
+         listresults = results.formattedResults.ruleResults[psiJson].localizedRuleName;
+     ruleNameList.push(listresults); 
+     }
+ }
+ return ruleNameList;
 }
 
-totalBytes(psiResults);
+function totalBytes(results){
+  var totalBytes=0;
+    for (psiJson in results.pageStats) {
+
+        if (psiJson.substr(psiJson.length-5) == "Bytes") {
+          totalBytes = totalBytes + parseInt(results.pageStats[psiJson]);
+        }
+        
+    }
+    return totalBytes;
+}
+
+
+console.log(ruleList(psinsights));
+console.log(totalBytes(psinsights));
 
 /*var bio ={
 			"name": name,
